@@ -1,0 +1,11 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "rust-analyzer.linkedProjects": ["${workspaceFolder}/ui/src-rs/Cargo.toml"],
+  "[rust]": {
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "files.eol": "\n"
+}
