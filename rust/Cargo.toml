@@ -1,0 +1,39 @@
+[workspace]
+members = ["core", "node", "mobile"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+version = "0.0.1"
+authors = ["luoluoqixi"]
+repository = "https://github.com/lona-labs/lonanote"
+license = ""
+
+[workspace.dependencies]
+serde = "1.0.215"
+serde_json = "1.0.133"
+tokio = { version = "1.42.0", features = ["full"] }
+async-trait = "0.1.83"
+anyhow = "1.0.94"
+log = "0.4.22"
+
+# tauri
+tauri = { version = "2.1.1" }
+specta = { version = "=2.0.0-rc.20" }
+tauri-plugin-clipboard-manager = { version = "2.2.0" }
+tauri-plugin-fs = { version = "2.2.0" }
+tauri-plugin-log = { version = "2.2.0" }
+tauri-plugin-os = { version = "2.2.0" }
+tauri-plugin-dialog = { version = "2.2.0" }
+tauri-plugin-shell = { version = "2.2.0" }
+
+# build
+tauri-build = { version = "2.0.3" }
+
+
+[profile.release]
+codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+lto = true        # Enables link to optimizations
+opt-level = "s"   # Optimize for binary size
+panic = "abort"   # Higher performance by disabling panic handlers.
+strip = true      # Remove debug symbols
