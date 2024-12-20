@@ -310,6 +310,9 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { sum } = nativeBinding
+const { sum, invoke, invokeAsync, init } = nativeBinding
 
 module.exports.sum = sum
+module.exports.invoke = invoke
+module.exports.invokeAsync = invokeAsync
+module.exports.init = init

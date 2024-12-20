@@ -3,17 +3,17 @@ use anyhow::{anyhow, Result};
 use super::super::{body::Json, context::CommandContext};
 
 pub trait FromCommandArgs: Sized {
-    fn from_args<'a>(key: &'a str, ctx: &'a CommandContext<'a>) -> Result<Self>;
+    fn from_args(key: &str, ctx: &CommandContext) -> Result<Self>;
 }
 
 impl<T> FromCommandArgs for Json<T>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
-    fn from_args<'a>(key: &'a str, ctx: &'a CommandContext<'a>) -> Result<Self> {
+    fn from_args(key: &str, ctx: &CommandContext) -> Result<Self> {
         match ctx.args() {
-            Some(arg) => {
-                let input_t = T::deserialize(arg)?;
+            Some(args) => {
+                let input_t = serde_json::from_str::<T>(args)?;
                 Ok(Json(input_t))
             }
             None => Err(anyhow!(
@@ -25,7 +25,7 @@ where
 }
 
 impl FromCommandArgs for () {
-    fn from_args<'a>(_: &'a str, _: &'a CommandContext<'a>) -> Result<Self> {
+    fn from_args(_: &str, _: &CommandContext) -> Result<Self> {
         Ok(())
     }
 }

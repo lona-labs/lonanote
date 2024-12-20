@@ -4,6 +4,7 @@ import type { TitleBarOverlay } from 'electron';
 import path from 'path';
 
 import icon from '../../resources/icon.png?asset';
+import { initInvokeIpc } from './invoke';
 import { settings } from './store';
 
 let mainWindow: BrowserWindow | undefined;
@@ -141,6 +142,8 @@ export const setupApp = async () => {
         }
       }
     });
+
+    initInvokeIpc(ipcMain);
 
     createWindow();
 

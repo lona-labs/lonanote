@@ -5,6 +5,8 @@ declare global {
     electron: ElectronAPI;
     api: {
       setTitleBarBtnColor: (color: string) => Promise<any>;
+      invoke: (cmd: string, args: any) => Promise<any>;
+      invokeAsync: (cmd: string, args: any) => Promise<any>;
     };
   }
 }

@@ -1,17 +1,15 @@
-use serde_json::Value;
-
 #[derive(Clone, Debug)]
-pub struct CommandContext<'a> {
-    args: Option<&'a Value>,
+pub struct CommandContext {
+    args: Option<String>,
 }
 
-unsafe impl Send for CommandContext<'_> {}
+unsafe impl Send for CommandContext {}
 
-impl<'a> CommandContext<'a> {
-    pub fn new(args: Option<&'a Value>) -> Self {
+impl CommandContext {
+    pub fn new(args: Option<String>) -> Self {
         Self { args }
     }
-    pub fn args(&self) -> Option<&Value> {
-        self.args
+    pub fn args(&self) -> Option<&String> {
+        self.args.as_ref()
     }
 }

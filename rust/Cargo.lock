@@ -2168,10 +2168,15 @@ dependencies = [
 name = "lonanote-core-node"
 version = "0.0.1"
 dependencies = [
+ "anyhow",
+ "log",
  "lonanote-core",
  "napi",
  "napi-build",
  "napi-derive",
+ "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]

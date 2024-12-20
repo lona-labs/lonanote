@@ -6,7 +6,7 @@ use super::from_command_args::FromCommandArgs;
 
 #[async_trait]
 pub trait CommandHandlerAsync<T>: Send + Sync + 'static {
-    async fn call<'a>(&self, key: &'a str, ctx: CommandContext<'a>) -> CommandResult;
+    async fn call(&self, key: &str, ctx: CommandContext) -> CommandResult;
 }
 
 macro_rules! impl_command_handler_async {
@@ -21,7 +21,7 @@ macro_rules! impl_command_handler_async {
                 $arg: FromCommandArgs + Send,
             )*
         {
-            async fn call<'a>(&self, key: &'a str, ctx: CommandContext<'a>) -> CommandResult {
+            async fn call(&self, key: & str, ctx: CommandContext) -> CommandResult {
                 (self)($(<$arg>::from_args(key, &ctx)?),*).await
             }
         }
@@ -35,7 +35,7 @@ macro_rules! impl_command_handler_async {
             Fut: Future<Output = CommandResult> + Send,
             $arg: FromCommandArgs + Send,
         {
-            async fn call<'a>(&self, key: &'a str, ctx: CommandContext<'a>) -> CommandResult {
+            async fn call(&self, key: & str, ctx: CommandContext) -> CommandResult {
                 (self)(<$arg>::from_args(key, &ctx)?).await
             }
         }
@@ -48,7 +48,7 @@ macro_rules! impl_command_handler_async {
             F: Fn() -> Fut + Send + Sync + 'static,
             Fut: Future<Output = CommandResult> + Send,
         {
-            async fn call<'a>(&self, _: &'a str, _: CommandContext<'a>) -> CommandResult {
+            async fn call(&self, _: & str, _: CommandContext) -> CommandResult {
                 (self)().await
             }
         }

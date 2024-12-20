@@ -6,6 +6,12 @@ const api = {
   setTitleBarColor: async (color: string, backgroudColor: string) => {
     await ipcRenderer.invoke('setTitleBarColor', color, backgroudColor);
   },
+  invoke: async (cmd: string, args: any) => {
+    return await ipcRenderer.invoke('invoke', cmd, args);
+  },
+  invokeAsync: async (cmd: string, args: any) => {
+    return await ipcRenderer.invoke('invokeAsync', cmd, args);
+  },
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

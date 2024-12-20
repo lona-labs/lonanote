@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { api } from '@/bindings/api';
 import { Link } from '@/components';
 import { ColorMode, colorModeList, useColorMode } from '@/utils/theme';
 
@@ -26,94 +27,28 @@ export default function Index() {
   //   };
   // }, []);
 
-  // let currentLogs = logs;
-  // const appendLog = (log: string) => {
-  //   console.log(log);
-  //   const newLogs = [...currentLogs, log];
-  //   currentLogs = newLogs;
-  //   setLogs(newLogs);
-  // };
-  // const logTime = (label: string, start: number) => {
-  //   appendLog(`${label} ${(performance.now() - start).toFixed(2)}ms`);
-  // };
+  let currentLogs = logs;
+  const appendLog = (log: string) => {
+    console.log(log);
+    const newLogs = [...currentLogs, log];
+    currentLogs = newLogs;
+    setLogs(newLogs);
+  };
+  const logTime = (label: string, start: number) => {
+    appendLog(`${label} ${(performance.now() - start).toFixed(2)}ms`);
+  };
 
-  // async function helloCommandJson() {
-  //   const msg = [];
-  //   for (let i = 0; i < 1000000; i++) {
-  //     msg.push(`test ts${i}`);
-  //   }
-  //   const start = performance.now();
-  //   const data = await api.hello.helloCommandJson(msg);
-  //   logTime('hello_command_json', start);
+  async function helloCommand() {
+    const msg: string[] = [];
+    for (let i = 0; i < 1000000; i++) {
+      msg.push(`test ts${i}`);
+    }
+    const start = performance.now();
+    const data = await api.helloCommand(msg);
+    logTime('hello_command: ' + data?.length, start);
 
-  //   console.log(data);
-  // }
-
-  // async function helloCommandRaw() {
-  //   const msg = [];
-  //   for (let i = 0; i < 1000000; i++) {
-  //     msg.push(i);
-  //   }
-  //   const data = new Uint8Array(msg);
-
-  //   const start = performance.now();
-  //   const r = await api.hello.helloCommandRaw(data);
-  //   logTime('hello_command_raw', start);
-
-  //   console.log(r);
-  // }
-
-  // async function helloCommandVoid() {
-  //   await api.hello.helloCommandVoid();
-  //   appendLog('hello_command_void finish');
-  // }
-
-  // async function helloCommandJsonAsync() {
-  //   const msg = [];
-  //   for (let i = 0; i < 1000000; i++) {
-  //     msg.push(`test ts${i}`);
-  //   }
-  //   const start = performance.now();
-  //   const data = await api.hello.helloCommandJsonAsync(msg);
-  //   logTime('hello_command_json_async', start);
-  //   console.log(data);
-  // }
-
-  // async function helloCommandRawAsync() {
-  //   const msg = [];
-  //   for (let i = 0; i < 1000000; i++) {
-  //     msg.push(i);
-  //   }
-  //   const data = new Uint8Array(msg);
-  //   const start = performance.now();
-  //   const r = await api.hello.helloCommandRawAsync(data);
-  //   logTime('hello_command_raw_async', start);
-  //   console.log(r);
-  // }
-
-  // async function helloCommandVoidAsync() {
-  //   await api.hello.helloCommandVoidAsync();
-  //   appendLog('hello_command_void_async finish');
-  // }
-
-  // async function testStore() {
-  //   const filePath = await store.settings.filePath();
-  //   const test1 = await store.settings.get('test1');
-
-  //   appendLog(`filePath: ${filePath}\ntest1: ${test1}`);
-  //   await store.settings.set('test1', 'test111_____123');
-
-  //   await store.settings.save();
-
-  //   const writeTest1 = await store.settings.get('test1');
-  //   appendLog(`writeTest1: ${writeTest1}`);
-
-  //   await store.settings.delete('test1');
-  // }
-
-  // async function testOS() {
-  //   appendLog(JSON.stringify(os));
-  // }
+    console.log(data);
+  }
 
   return (
     <div style={{ backgroundColor: 'transparent', margin: '10px' }}>
@@ -121,21 +56,8 @@ export default function Index() {
         <Link to="/about">About Page</Link>
         <div>
           {/* <Separator className="my-4" /> */}
-          {/* <div>
-            <button onClick={() => helloCommandJson()}>HelloCommandJson</button>
-            <button onClick={() => helloCommandRaw()}>HelloCommandRaw</button>
-            <button onClick={() => helloCommandVoid()}>HelloCommandVoid</button>
-          </div>
           <div>
-            <button onClick={() => helloCommandJsonAsync()}>HelloCommandJsonAsync</button>
-            <button onClick={() => helloCommandRawAsync()}>HelloCommandRawAsync</button>
-            <button onClick={() => helloCommandVoidAsync()}>HelloCommandVoidAsync</button>
-          </div>
-          <div>
-            <button onClick={() => testOS()}>TestOS</button>
-            <button onClick={() => testStore()}>TestStore</button>
-          </div> */}
-          <div>
+            <button onClick={helloCommand}>helloCommand</button>
             <button onClick={() => toast('TestToast')}>Toast</button>
           </div>
           <div style={{ width: 200 }}>

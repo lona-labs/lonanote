@@ -39,7 +39,7 @@ export const renderer: UserConfig = {
     },
   },
   server: {
-    host: '0.0.0.0',
+    host: tauriDevHost || '0.0.0.0',
     port: 8000,
     open: false,
     hmr: tauriDevHost

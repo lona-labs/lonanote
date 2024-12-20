@@ -13,7 +13,7 @@ use tokio::sync::RwLock;
 type CommandHandlerResultAsync<'a> = Pin<Box<dyn Future<Output = CommandResult> + Send + 'a>>;
 
 type CommandHandlerValueAsync =
-    Box<dyn for<'b> Fn(&'b str, CommandContext<'b>) -> CommandHandlerResultAsync<'b> + Send + Sync>;
+    Box<dyn for<'b> Fn(&'b str, CommandContext) -> CommandHandlerResultAsync<'b> + Send + Sync>;
 
 struct CommandsAsync {
     commands: HashMap<&'static str, CommandHandlerValueAsync>,
@@ -32,7 +32,7 @@ impl CommandsAsync {
         let f = std::sync::Arc::new(f);
         let wrapped_fn =
             for<'b> move |key: &'b str,
-                          ctx: CommandContext<'b>|
+                          ctx: CommandContext|
                           -> Pin<Box<dyn Future<Output = CommandResult> + Send + 'b>> {
                 let f = std::sync::Arc::clone(&f);
                 Box::pin(async move {
@@ -90,7 +90,7 @@ pub fn clear_command_async() -> Result<()> {
     });
     Ok(())
 }
-pub async fn invoke_command_async<'a>(key: &str, ctx: CommandContext<'a>) -> CommandResult {
+pub async fn invoke_command_async(key: &str, ctx: CommandContext) -> CommandResult {
     let commands = COMMANDS_ASYNC.read().await;
     // let commands = COMMANDS_ASYNC.read().unwrap();
     if let Some(cmd) = commands.get_command(key) {

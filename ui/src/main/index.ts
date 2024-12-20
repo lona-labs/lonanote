@@ -1,3 +1,9 @@
 import { setupApp } from './app';
+import { init, invoke } from './invoke';
 
-setupApp();
+const main = () => {
+  init();
+  setupApp();
+};
+
+main();
