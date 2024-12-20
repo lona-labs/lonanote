@@ -11,12 +11,15 @@
   - `pnpm` >= 9.15.0
   - 安装 `npm install -g @napi-rs/cli`
 - Android
-  - 安装 `Android Studio` 和附带的 `SDK (33+)`、`NDK (27.0.12077973)`、`Platform-Tools`
+  - 安装 `Android Studio` 和附带的 `SDK`、`NDK`、`Platform-Tools`
   - 设置 `<android studio installation path>/jbr` 目录到JAVA_HOME 环境变量
   - 设置 `ndk` 路径到 `NDK_HOME` 环境变量
   - 设置 `sdk` 路径到 `ANDROID_HOME` 环境变量
+  - 详情查看 [Tauri 文档](https://tauri.app/start/prerequisites/#android)
 - IOS
   - 安装 `XCode`
+  - 安装 `Cocoapods`
+  - 详情查看 [Tauri 文档](https://tauri.app/start/prerequisites/#ios)
 
 
 #### 运行 Windows / Mac / Linux
@@ -49,19 +52,15 @@ pnpm -C ui build:ios
 - 运行 Android
 
 ```shell
-cd ./ui
-
 # 提前使用 USB 连接真机或启动 AndroidStudio 模拟器
-pnpm dev:android
+pnpm -C ui dev:android
 ```
 
 - 运行 IOS
 
 ```shell
-cd ./ui
-
 # 提前使用 USB 连接真机或启动 IOS 模拟器
-pnpm dev:ios
+pnpm -C ui dev:ios
 ```
 
 > 首次运行应用程序时会被阻止
