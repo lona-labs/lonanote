@@ -48,6 +48,8 @@ pub fn run() {
         .setup(|app| {
             let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default());
             let _ = win_builder.build().unwrap();
+            commands::init_commands()?;
+
             Ok(())
         })
         .build(ctx)

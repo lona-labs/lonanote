@@ -1,3 +1,12 @@
-pub fn sum(a: i32, b: i32) -> i32 {
-    a + b
+mod api;
+
+use anyhow::Result;
+use log::info;
+pub use lonanote_commands::*;
+
+pub fn init() -> Result<()> {
+    info!("init...");
+    api::reg_commands()?;
+    info!("init finish!");
+    Ok(())
 }
