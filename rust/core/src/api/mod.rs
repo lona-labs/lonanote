@@ -2,12 +2,12 @@ use anyhow::Result;
 use log::info;
 
 use lonanote_commands::{
-    body::JsonBody,
+    body::Json,
     reg_command,
     result::{CommandResult, CommandResultUtility},
 };
 
-pub fn hello_command(JsonBody(args): JsonBody<Vec<String>>) -> CommandResult {
+pub fn hello_command(Json(args): Json<Vec<String>>) -> CommandResult {
     println!("[hello_command]");
 
     CommandResult::json(args.clone())

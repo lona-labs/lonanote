@@ -2,10 +2,10 @@ pub trait BodyInner<T> {
     fn inner(&self) -> &T;
 }
 
-pub struct JsonBody<T>(pub T)
+pub struct Json<T>(pub T)
 where
     T: for<'de> serde::Deserialize<'de>;
-impl<T> BodyInner<T> for JsonBody<T>
+impl<T> BodyInner<T> for Json<T>
 where
     T: for<'de> serde::Deserialize<'de>,
 {

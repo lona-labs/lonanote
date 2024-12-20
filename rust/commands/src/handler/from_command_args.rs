@@ -1,12 +1,12 @@
 use anyhow::{anyhow, Result};
 
-use super::super::{body::JsonBody, context::CommandContext};
+use super::super::{body::Json, context::CommandContext};
 
 pub trait FromCommandArgs: Sized {
     fn from_args<'a>(key: &'a str, ctx: &'a CommandContext<'a>) -> Result<Self>;
 }
 
-impl<T> FromCommandArgs for JsonBody<T>
+impl<T> FromCommandArgs for Json<T>
 where
     T: for<'de> serde::Deserialize<'de>,
 {
@@ -14,7 +14,7 @@ where
         match ctx.args() {
             Some(arg) => {
                 let input_t = T::deserialize(arg)?;
-                Ok(JsonBody(input_t))
+                Ok(Json(input_t))
             }
             None => Err(anyhow!(
                 "expected [JSON] body but no body provided: {}",
