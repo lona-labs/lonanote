@@ -50,6 +50,18 @@ export default function Index() {
     console.log(data);
   }
 
+  async function helloCommandAsync() {
+    const msg: string[] = [];
+    for (let i = 0; i < 1000000; i++) {
+      msg.push(`test ts${i}`);
+    }
+    const start = performance.now();
+    const data = await api.helloCommandAsync(msg);
+    logTime('hello_command_async: ' + data?.length, start);
+
+    console.log(data);
+  }
+
   return (
     <div style={{ backgroundColor: 'transparent', margin: '10px' }}>
       <div>
@@ -58,6 +70,7 @@ export default function Index() {
           {/* <Separator className="my-4" /> */}
           <div>
             <button onClick={helloCommand}>helloCommand</button>
+            <button onClick={helloCommandAsync}>helloCommandAsync</button>
             <button onClick={() => toast('TestToast')}>Toast</button>
           </div>
           <div style={{ width: 200 }}>

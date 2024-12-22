@@ -1,12 +1,14 @@
 use anyhow::{anyhow, Result};
 use std::{
-    collections::HashMap,
     future::Future,
     pin::Pin,
     sync::{Arc, LazyLock},
 };
 
-use super::super::{context::CommandContext, handler::CommandHandlerAsync, result::CommandResult};
+use super::{
+    super::{context::CommandContext, handler::CommandHandlerAsync, result::CommandResult},
+    Commands,
+};
 
 use tokio::sync::RwLock;
 
@@ -15,45 +17,7 @@ type CommandHandlerResultAsync<'a> = Pin<Box<dyn Future<Output = CommandResult> 
 type CommandHandlerValueAsync =
     Box<dyn for<'b> Fn(&'b str, CommandContext) -> CommandHandlerResultAsync<'b> + Send + Sync>;
 
-struct CommandsAsync {
-    commands: HashMap<&'static str, CommandHandlerValueAsync>,
-}
-
-impl CommandsAsync {
-    pub fn new() -> Self {
-        Self {
-            commands: HashMap::new(),
-        }
-    }
-    pub fn reg<T, H>(&mut self, command: &'static str, f: H)
-    where
-        H: CommandHandlerAsync<T> + Send + Sync + 'static,
-    {
-        let f = std::sync::Arc::new(f);
-        let wrapped_fn =
-            for<'b> move |key: &'b str,
-                          ctx: CommandContext|
-                          -> Pin<Box<dyn Future<Output = CommandResult> + Send + 'b>> {
-                let f = std::sync::Arc::clone(&f);
-                Box::pin(async move {
-                    let f = f.call(key, ctx);
-                    f.await
-                })
-            };
-        self.commands.insert(command, Box::new(wrapped_fn));
-    }
-    pub fn unreg(&mut self, command: &'static str) {
-        if self.commands.contains_key(command) {
-            self.commands.remove(command);
-        }
-    }
-    pub fn clear(&mut self) {
-        self.commands.clear();
-    }
-    pub fn get_command(&self, key: &str) -> Option<&CommandHandlerValueAsync> {
-        self.commands.get(key)
-    }
-}
+pub type CommandsAsync = Commands<&'static str, CommandHandlerValueAsync>;
 
 static COMMANDS_ASYNC: LazyLock<Arc<RwLock<CommandsAsync>>> =
     LazyLock::new(|| Arc::new(RwLock::new(CommandsAsync::new())));
@@ -65,7 +29,18 @@ where
     let rt = tokio::runtime::Runtime::new()?;
     rt.block_on(async {
         let mut commands = COMMANDS_ASYNC.write().await;
-        commands.reg(command, handler);
+        let f = std::sync::Arc::new(handler);
+        let wrapped_fn =
+            for<'b> move |key: &'b str,
+                          ctx: CommandContext|
+                          -> Pin<Box<dyn Future<Output = CommandResult> + Send + 'b>> {
+                let f = std::sync::Arc::clone(&f);
+                Box::pin(async move {
+                    let f = f.call(key, ctx);
+                    f.await
+                })
+            };
+        commands.reg(command, Box::new(wrapped_fn));
     });
     // COMMANDS_ASYNC
     //     .write()
@@ -78,7 +53,7 @@ pub fn unreg_command_async(command: &'static str) -> Result<()> {
     let rt = tokio::runtime::Runtime::new()?;
     rt.block_on(async {
         let mut commands = COMMANDS_ASYNC.write().await;
-        commands.unreg(command);
+        commands.unreg(&command);
     });
     Ok(())
 }
@@ -93,7 +68,7 @@ pub fn clear_command_async() -> Result<()> {
 pub async fn invoke_command_async(key: &str, ctx: CommandContext) -> CommandResult {
     let commands = COMMANDS_ASYNC.read().await;
     // let commands = COMMANDS_ASYNC.read().unwrap();
-    if let Some(cmd) = commands.get_command(key) {
+    if let Some(cmd) = commands.get(&key) {
         cmd(key, ctx).await
     } else {
         Err(anyhow!("async command not found: {}", key))

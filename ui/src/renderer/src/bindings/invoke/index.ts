@@ -7,7 +7,7 @@ export const invoke = async <T>(cmd: string, args?: any): Promise<T | undefined>
   } else if (isNode) {
     return await invokeNode(cmd, args);
   } else {
-    throw new Error('未知环境');
+    throw new Error('invoke error: unknow env');
   }
 };
 
@@ -17,6 +17,6 @@ export const invokeAsync = async <T>(cmd: string, args?: any): Promise<T | undef
   } else if (isNode) {
     return await invokeAsyncNode(cmd, args);
   } else {
-    throw new Error('未知环境');
+    throw new Error('invoke error: unknow env');
   }
 };

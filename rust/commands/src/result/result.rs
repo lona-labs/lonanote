@@ -1,9 +1,8 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 
 use serde::Serialize;
-use serde_json::Value;
 
-pub type CommandResult = Result<Option<Value>>;
+pub type CommandResult = Result<Option<String>>;
 
 pub trait CommandResultUtility {
     fn json<T>(data: T) -> Self
@@ -16,9 +15,9 @@ impl CommandResultUtility for CommandResult {
     where
         T: Serialize,
     {
-        match serde_json::to_value(data) {
+        match serde_json::to_string(&data) {
             Ok(r) => Ok(Some(r)),
-            Err(err) => Err(anyhow!(err)),
+            Err(err) => Err(err.into()),
         }
     }
 }

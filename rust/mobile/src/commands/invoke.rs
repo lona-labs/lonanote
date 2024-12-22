@@ -10,7 +10,7 @@ use tauri::{
 pub fn parse_invoke_result(res: CommandResult) -> Result<Response> {
     let r = match res {
         Ok(r) => match r {
-            Some(json) => Ok(Some(InvokeBody::Json(json))),
+            Some(json) => Ok(Some(InvokeBody::Json(serde_json::from_str(json.as_str())?))),
             None => Ok(None),
         },
         Err(err) => Err(err),

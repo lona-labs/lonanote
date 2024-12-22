@@ -6,4 +6,8 @@
 export declare function sum(a: number, b: number): number
 export declare function invoke(key: string, args?: string | undefined | null): string | null
 export declare function invokeAsync(key: string, args?: string | undefined | null): Promise<string | null>
+export declare function regJsFunction(key: string, callback: ((args: string | null | undefined) => string | null | undefined)): void
+export declare function unregJsFunction(key: string): void
+export declare function clearJsFunction(): void
+export declare function testRustCall(): void
 export declare function init(): string | null

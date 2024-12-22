@@ -12,6 +12,18 @@ const api = {
   invokeAsync: async (cmd: string, args: any) => {
     return await ipcRenderer.invoke('invokeAsync', cmd, args);
   },
+  // regJsFunction: async (
+  //   key: string,
+  //   callback: (args: string | null | undefined) => string | null | undefined,
+  // ) => {
+  //   return await ipcRenderer.invoke('regJsFunction', key, callback);
+  // },
+  // unregJsFunction: async (key: string) => {
+  //   return await ipcRenderer.invoke('unregJsFunction', key);
+  // },
+  // clearJsFunction: async () => {
+  //   return await ipcRenderer.invoke('clearJsFunction');
+  // },
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
