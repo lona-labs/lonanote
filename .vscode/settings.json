@@ -17,5 +17,6 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "scss.lint.validProperties": ["app-region", "user-drag"]
+  "scss.lint.validProperties": ["app-region", "user-drag"],
+  "prettier.ignorePath": "ui/.prettierignore"
 }

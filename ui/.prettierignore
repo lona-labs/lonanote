@@ -16,5 +16,7 @@ package-lock.json
 pnpm-lock.yaml
 pnpm-lock.json
 
+../rust/node/
+
 *.rs
 *.yaml
