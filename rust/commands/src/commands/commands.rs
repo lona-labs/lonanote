@@ -46,7 +46,7 @@ pub fn clear_command() -> Result<()> {
     }
 }
 pub fn invoke_command(key: &str, ctx: CommandContext) -> CommandResult {
-    match COMMANDS.write() {
+    match COMMANDS.read() {
         Ok(commands) => {
             if let Some(cmd) = commands.get(&key) {
                 cmd(key, ctx)

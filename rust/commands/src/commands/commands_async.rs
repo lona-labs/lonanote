@@ -31,9 +31,7 @@ where
         let mut commands = COMMANDS_ASYNC.write().await;
         let f = std::sync::Arc::new(handler);
         let wrapped_fn =
-            for<'b> move |key: &'b str,
-                          ctx: CommandContext|
-                          -> Pin<Box<dyn Future<Output = CommandResult> + Send + 'b>> {
+            for<'b> move |key: &'b str, ctx: CommandContext| -> CommandHandlerResultAsync<'b> {
                 let f = std::sync::Arc::clone(&f);
                 Box::pin(async move {
                     let f = f.call(key, ctx);

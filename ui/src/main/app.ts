@@ -80,6 +80,8 @@ const createWindow = async () => {
     win.webContents.setZoomLevel(zoom);
   }
 
+  initInvokeIpc(ipcMain, win);
+
   win.show();
 };
 
@@ -142,8 +144,6 @@ export const setupApp = async () => {
         }
       }
     });
-
-    initInvokeIpc(ipcMain);
 
     createWindow();
 
