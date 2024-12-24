@@ -1,6 +1,9 @@
 #![deny(clippy::all)]
 
-use napi::{bindgen_prelude::*, threadsafe_function::*, *};
+use napi::{
+    bindgen_prelude::*,
+    threadsafe_function::{ErrorStrategy, ThreadsafeFunction},
+};
 
 use lonanote_core::{
     context::CommandContext, invoke_command, invoke_command_async, result::CommandResult,
@@ -35,57 +38,17 @@ pub fn reg_js_function(key: String, callback: JsFunction) -> Result<()> {
             Some(v) => ctx.env.create_string_from_std(v).map(|v| vec![Some(v)]),
             None => Ok(vec![None]),
         })?;
-
-    let f = std::sync::Arc::new(tsfn);
-
     let wrapped_fn = move |args: Option<String>| -> lonanote_core::CommandHandlerValueJsResult {
-        let f = std::sync::Arc::clone(&f);
+        let f = tsfn.clone();
         Box::pin(async move {
-            let _r: Result<JsUnknown> = f.call_async(args).await;
-            // let f = f.call(key, args);
-            // f.await
-            Ok(None)
+            let r: Promise<Option<String>> = f.call_async(args).await?;
+            let r = r.await?;
+            Ok(r)
         })
     };
-
-    // let f = move |args: String, blocking: bool, cb: Option<fn(Option<String>)>| {
-    //     let mode = if blocking {
-    //         ThreadsafeFunctionCallMode::Blocking
-    //     } else {
-    //         ThreadsafeFunctionCallMode::NonBlocking
-    //     };
-    //     if let Some(cb) = cb {
-    //         tsfn.call_with_return_value(args, mode, move |ret: JsUnknown| {
-    //             let t = ret.get_type()?;
-    //             if t == ValueType::String {
-    //                 let s: JsString = ret.coerce_to_string()?;
-    //                 let rs_str = s.into_utf8()?.into_owned()?;
-    //                 cb(Some(rs_str));
-    //                 Ok(())
-    //             } else {
-    //                 cb(None);
-    //                 Ok(())
-    //             }
-    //         });
-    //     } else {
-    //         tsfn.call(args, mode);
-    //     }
-    //     Ok(())
-    // };
-    // let wrapper_fn = Box::new(f);
     lonanote_core::reg_command_js(key, Box::new(wrapped_fn))
         .map_err(|err| napi::Error::from_reason(err.to_string()))?;
     Ok(())
-
-    // let f = std::sync::Arc::new(handler);
-    // let wrapped_fn = move |key: String, args: Option<String>| -> CommandHandlerValueJsResult {
-    //     let f = std::sync::Arc::clone(&f);
-    //     Box::pin(async move {
-    //         let f = f.call(key, args);
-    //         f.await
-    //     })
-    // };
-    // commands.reg(command, Box::new(wrapped_fn));
 }
 
 #[napi(ts_args_type = "key: string")]
@@ -103,9 +66,10 @@ pub fn clear_js_function() -> Result<()> {
 
 #[napi]
 pub async fn test_rust_call() -> Result<()> {
-    let ret = lonanote_core::invoke_command_js("test_func", Some("args1".to_string()))
-        .await
-        .map_err(|err| napi::Error::from_reason(err.to_string()))?;
+    let ret: Option<String> =
+        lonanote_core::invoke_command_js_lazy("test_func", Some("args1".to_string()))
+            .await
+            .map_err(|err| napi::Error::from_reason(err.to_string()))?;
     println!("test_rust_call: {:?}", ret);
     Ok(())
 }

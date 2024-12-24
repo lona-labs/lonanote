@@ -38,9 +38,7 @@ impl<K, F> Deref for Commands<K, F> {
 mod commands;
 mod commands_async;
 mod commands_js;
-mod commands_js_async;
 
 pub use commands::*;
 pub use commands_async::*;
 pub use commands_js::*;
-pub use commands_js_async::*;

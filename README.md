@@ -9,7 +9,6 @@
   - `Rust` >= 1.85.0-nightly
   - `Node` >= 20
   - `pnpm` >= 9.15.0
-  - 安装 `npm install -g @napi-rs/cli`
 - Android
   - 安装 `Android Studio` 和附带的 `SDK`、`NDK`、`Platform-Tools`
   - 设置 `<android studio installation path>/jbr` 目录到JAVA_HOME 环境变量

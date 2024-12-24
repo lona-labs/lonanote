@@ -1,29 +1,56 @@
 import { electronAPI } from '@electron-toolkit/preload';
 import { contextBridge, ipcRenderer } from 'electron';
 
+let jsFunctions:
+  | Record<
+      string,
+      ((args: string | null | undefined) => Promise<string | null | undefined>) | undefined
+    >
+  | undefined = undefined;
+
+ipcRenderer.on('jsFunctionCall', async (_, key, args, returnChannel) => {
+  if (!jsFunctions || !jsFunctions[key]) {
+    ipcRenderer.send(returnChannel, 0);
+    return;
+  }
+  let res: string | null | undefined;
+  try {
+    res = await jsFunctions[key](args);
+  } catch (e) {
+    console.error('jsFunctionCall error:', e);
+    res = undefined;
+  }
+  ipcRenderer.send(returnChannel, 1, res);
+});
+
 // Custom APIs for renderer
 const api = {
   setTitleBarColor: async (color: string, backgroudColor: string) => {
     await ipcRenderer.invoke('setTitleBarColor', color, backgroudColor);
   },
-  invoke: async (cmd: string, args: any) => {
-    return await ipcRenderer.invoke('invoke', cmd, args);
+  invoke: async (key: string, args: string | null | undefined) => {
+    return await ipcRenderer.invoke('invoke', key, args);
   },
-  invokeAsync: async (cmd: string, args: any) => {
-    return await ipcRenderer.invoke('invokeAsync', cmd, args);
+  invokeAsync: async (key: string, args: string | null | undefined) => {
+    return await ipcRenderer.invoke('invokeAsync', key, args);
   },
-  // regJsFunction: async (
-  //   key: string,
-  //   callback: (args: string | null | undefined) => string | null | undefined,
-  // ) => {
-  //   return await ipcRenderer.invoke('regJsFunction', key, callback);
-  // },
-  // unregJsFunction: async (key: string) => {
-  //   return await ipcRenderer.invoke('unregJsFunction', key);
-  // },
-  // clearJsFunction: async () => {
-  //   return await ipcRenderer.invoke('clearJsFunction');
-  // },
+  regJsFunction: async (
+    key: string,
+    callback: (args: string | null | undefined) => Promise<string | null | undefined>,
+  ) => {
+    jsFunctions = jsFunctions || {};
+    jsFunctions[key] = callback;
+    return await ipcRenderer.invoke('regJsFunction', key);
+  },
+  unregJsFunction: async (key: string) => {
+    jsFunctions = jsFunctions || {};
+    jsFunctions[key] = undefined;
+    return await ipcRenderer.invoke('unregJsFunction', key);
+  },
+  clearJsFunction: async () => {
+    jsFunctions = {};
+    return await ipcRenderer.invoke('clearJsFunction');
+  },
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

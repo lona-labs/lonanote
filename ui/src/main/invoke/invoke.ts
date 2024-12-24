@@ -7,26 +7,25 @@ import {
   unregJsFunction as _unregJsFunction,
 } from 'lonanote-core-node';
 
-const getResult = (res: string | null) => {
-  if (res == null) {
-    return undefined;
-  }
-  return JSON.parse(res);
+export const invoke = (
+  key: string,
+  args?: string | null | undefined,
+): string | null | undefined => {
+  const res = _invoke(key, args);
+  return res;
 };
 
-export const invoke = <T>(key: string, args?: any): T | undefined => {
-  const res = _invoke(key, JSON.stringify(args));
-  return getResult(res);
-};
-
-export const invokeAsync = async <T>(key: string, args?: any): Promise<T | undefined> => {
-  const res = await _invokeAsync(key, JSON.stringify(args));
-  return getResult(res);
+export const invokeAsync = async (
+  key: string,
+  args?: string | null | undefined,
+): Promise<string | null | undefined> => {
+  const res = await _invokeAsync(key, args);
+  return res;
 };
 
 export const regJsFunction = (
   key: string,
-  callback: (args: string | null | undefined) => string | null | undefined,
+  callback: (args: string | null | undefined) => Promise<string | null | undefined>,
 ): void => {
   _regJsFunction(key, callback);
 };

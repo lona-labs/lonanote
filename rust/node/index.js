@@ -310,8 +310,9 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { invoke, invokeAsync, regJsFunction, unregJsFunction, clearJsFunction, testRustCall, init } = nativeBinding
+const { sum, invoke, invokeAsync, regJsFunction, unregJsFunction, clearJsFunction, testRustCall, init } = nativeBinding
 
+module.exports.sum = sum
 module.exports.invoke = invoke
 module.exports.invokeAsync = invokeAsync
 module.exports.regJsFunction = regJsFunction

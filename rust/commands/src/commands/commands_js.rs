@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use serde::{Deserialize, Serialize};
 use std::{
     future::Future,
     pin::Pin,
@@ -53,5 +54,24 @@ pub async fn invoke_command_js(
         cmd(args).await
     } else {
         Err(anyhow!("async command not found: {}", k,))
+    }
+}
+
+pub async fn invoke_command_js_lazy<T, TRet>(
+    key: impl AsRef<str>,
+    args: Option<T>,
+) -> Result<Option<TRet>>
+where
+    T: Serialize,
+    TRet: for<'de> Deserialize<'de>,
+{
+    let args = match args {
+        Some(args) => Some(serde_json::to_string(&args)?),
+        None => None,
+    };
+    let res = invoke_command_js(key, args).await?;
+    match res {
+        Some(res) => Ok(Some(serde_json::from_str::<TRet>(res.as_str())?)),
+        None => Ok(None),
     }
 }

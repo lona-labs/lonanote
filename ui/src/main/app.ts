@@ -37,6 +37,8 @@ const createWindow = async () => {
     },
   });
 
+  initInvokeIpc(ipcMain, win);
+
   mainWindow = win;
 
   win.on('ready-to-show', () => {
@@ -79,8 +81,6 @@ const createWindow = async () => {
   if (win.webContents.getZoomLevel() !== zoom) {
     win.webContents.setZoomLevel(zoom);
   }
-
-  initInvokeIpc(ipcMain, win);
 
   win.show();
 };

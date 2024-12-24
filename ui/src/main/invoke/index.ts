@@ -9,25 +9,31 @@ export const initInvokeIpc = (ipcMain: Electron.IpcMain, win: BrowserWindow) => 
   let returnSequence = 0;
   const jsFunctionCallChannel = 'jsFunctionCall';
   const jsFunctionCall = (
-    webContent: Electron.WebContents,
+    webContents: Electron.WebContents,
     key: string,
     args: string | null | undefined,
   ): Promise<string | null | undefined> => {
-    return new Promise((resolve) => {
-      if (webContent) {
+    return new Promise((resolve, reject) => {
+      if (webContents) {
+        if (webContents.isLoading()) {
+          reject(new Error('webContents is loading'));
+          return;
+        }
         if (returnSequence === Number.MAX_SAFE_INTEGER) {
           returnSequence = 0;
         }
         const returnChannel = `${jsFunctionCallChannel}:return:${returnSequence++}`;
-        webContent.send(jsFunctionCallChannel, args, returnChannel);
-        ipcMain.once(returnChannel, (_, result) => {
-          resolve(result);
+        ipcMain.once(returnChannel, (_, code, result) => {
+          if (code === 1) {
+            resolve(result);
+          } else {
+            reject(new Error('notfound js function: ' + key));
+          }
         });
+        webContents.send(jsFunctionCallChannel, key, args, returnChannel);
+      } else {
+        resolve(undefined);
       }
-      if (ipcMain.emit('jsFunctionCall', key, args)) {
-        return undefined;
-      }
-      return undefined;
     });
   };
   ipcMain.removeHandler('invoke');
@@ -53,4 +59,6 @@ export const initInvokeIpc = (ipcMain: Electron.IpcMain, win: BrowserWindow) => 
   });
 
   clearJsFunction();
+
+  setTimeout(() => testRustCall(), 2000);
 };
