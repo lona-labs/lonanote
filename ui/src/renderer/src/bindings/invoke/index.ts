@@ -77,9 +77,9 @@ export const clearJsFunction = async () => {
   }
 };
 
-regJsFunction<string, string>('test_func', async (args) => {
-  console.log('这是args: ' + args);
-  return '这是返回值';
-});
+// regJsFunction<string, string>('test_func', async (args) => {
+//   console.log('这是args: ' + args);
+//   return '这是返回值';
+// });
 
 export { isNode, isTauri };

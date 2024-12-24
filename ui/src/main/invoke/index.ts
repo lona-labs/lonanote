@@ -60,5 +60,5 @@ export const initInvokeIpc = (ipcMain: Electron.IpcMain, win: BrowserWindow) => 
 
   clearJsFunction();
 
-  setTimeout(() => testRustCall(), 2000);
+  // setTimeout(() => testRustCall(), 2000);
 };
