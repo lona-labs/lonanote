@@ -8,9 +8,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--chakra-colors-bg);
+  background-color: hsl(var(--heroui-background-100));
   overflow: visible;
-  border-right: 1px solid var(--chakra-colors-border);
+  border-right: 1px solid hsl(var(--heroui-divider) / 0.15);
 }
 
 .titleTop {
@@ -29,17 +29,10 @@
 }
 
 .titleTabRoot {
+  @extend %window-title-no-drag;
   width: 100%;
   justify-content: center;
   overflow: visible;
-}
-
-.titleTabList {
-  @extend %window-title-no-drag;
-  height: 100%;
-  width: 80%;
-  align-items: center;
-  gap: 2px;
 }
 
 .titleTabItem {

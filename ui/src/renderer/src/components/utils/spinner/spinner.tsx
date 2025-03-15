@@ -1,4 +1,4 @@
-import { Box, Center, Spinner } from '@chakra-ui/react';
+import { Spinner } from '@heroui/react';
 
 import { useGlobalSpinnerStore } from '@/models/global';
 
@@ -26,19 +26,28 @@ export const hideSpinner = () => {
 
 export const GlobalSpinner = () => {
   const store = useGlobalSpinnerStore();
+  // <Box
+  //   visibility={store.open ? 'visible' : 'hidden'}
+  //   zIndex={9998}
+  //   pos="absolute"
+  //   inset="0"
+  //   bg="bg/80"
+  //   pointerEvents="auto"
+  // >
+  //   <Center h="full">
+  //     <Spinner color="teal.500" />
+  //     <div style={{ marginLeft: '10px' }}>{store.content}</div>
+  //   </Center>
+  // </Box>
   return (
-    <Box
-      visibility={store.open ? 'visible' : 'hidden'}
-      zIndex={9998}
-      pos="absolute"
-      inset="0"
-      bg="bg/80"
-      pointerEvents="auto"
+    <div
+      className="h-full w-full absolute inset-0 pointer-events-auto"
+      style={{
+        visibility: store.open ? 'visible' : 'hidden',
+        zIndex: 9998,
+      }}
     >
-      <Center h="full">
-        <Spinner color="teal.500" />
-        <div style={{ marginLeft: '10px' }}>{store.content}</div>
-      </Center>
-    </Box>
+      <Spinner />
+    </div>
   );
 };

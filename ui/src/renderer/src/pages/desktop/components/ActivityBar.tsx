@@ -1,9 +1,8 @@
-import React from 'react';
+import { Button, Tab, Tabs, Tooltip } from '@heroui/react';
+import { ReactNode } from 'react';
 import { LuFolder, LuLibraryBig, LuSearch, LuSettings } from 'react-icons/lu';
 
 // import { VscExtensions } from 'react-icons/vsc';
-
-import { Icon, IconButton, Tabs, Tooltip } from '@/components/ui';
 
 import styles from './ActivityBar.module.scss';
 import { useSettingsState } from './dialogs/settings';
@@ -18,7 +17,7 @@ export interface ActivityBarProps {
 
 export interface FunctionType {
   value: string;
-  title?: React.ReactNode;
+  title?: ReactNode;
   tooltip?: string;
 }
 
@@ -66,8 +65,6 @@ const onBtnClick = (value: string) => {
   }
 };
 
-const startTabIndex = 0;
-
 export const ActivityBar: React.FC<ActivityBarProps> = ({
   tabValue,
   isShowTabContent,
@@ -75,46 +72,55 @@ export const ActivityBar: React.FC<ActivityBarProps> = ({
   onTabChange,
 }) => {
   const curTabValue = tabValue || tabs[0].value;
-  const tabsIndex = startTabIndex;
-  const btnIndex = tabsIndex + tabs.length;
   return (
     <div className={styles.title}>
       <div style={{ height: topHeight }} className={styles.titleTop}>
-        <Tabs.Wrap
+        <Tabs
           className={styles.titleTabRoot}
-          orientation="vertical"
-          variant="subtle"
-          tabs={tabs}
-          value={isShowTabContent ? curTabValue : ''}
-          itemRender={(item) => <Icon fontSize="1.25em">{item.title}</Icon>}
-          triggerListProps={{ className: styles.titleTabList }}
-          triggerProps={{
-            className: styles.titleTabItem,
+          color="primary"
+          variant="light"
+          isVertical
+          fullWidth
+          disableAnimation
+          classNames={{
+            tab: 'p-0',
+            tabContent: 'p-0 w-full h-full',
           }}
-          tooltipProps={{ positioning: { placement: 'right' } }}
-          onValueChange={(e) => onTabChange(e.value)}
-          startTabIndex={tabsIndex}
-          onTriggerClick={(v) => {
-            if (v.value === curTabValue) {
+          selectedKey={isShowTabContent ? curTabValue : ''}
+          onSelectionChange={(v) => {
+            onTabChange(v as string);
+            if (v === curTabValue) {
               setShowTabContent?.(!isShowTabContent);
             } else {
               setShowTabContent?.(true);
             }
           }}
-        />
+          items={tabs}
+        >
+          {(tab) => (
+            <Tab
+              key={tab.value}
+              title={
+                <Tooltip content={tab.tooltip} placement="right" delay={200}>
+                  <div className="w-full h-full flex justify-center items-center">{tab.title}</div>
+                </Tooltip>
+              }
+            />
+          )}
+        </Tabs>
       </div>
       <div style={{ height: bottomHeight, gap: bottomGap }} className={styles.titleBottom}>
-        {fixedBtns.map((item, i) => (
+        {fixedBtns.map((item) => (
           <div key={item.value}>
-            <Tooltip content={item.tooltip} positioning={{ placement: 'right' }}>
-              <IconButton
-                tabIndex={btnIndex + i}
-                onClick={() => onBtnClick(item.value)}
+            <Tooltip content={item.tooltip} placement="right">
+              <Button
+                isIconOnly
+                onPress={() => onBtnClick(item.value)}
                 className={styles.titleBottomItem}
-                variant="ghost"
+                variant="light"
               >
                 {item.title}
-              </IconButton>
+              </Button>
             </Tooltip>
           </div>
         ))}

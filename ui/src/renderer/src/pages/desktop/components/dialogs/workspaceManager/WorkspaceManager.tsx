@@ -1,5 +1,5 @@
-import { Box, Span } from '@chakra-ui/react';
-import React, { RefObject, useRef, useState } from 'react';
+import { Button, Modal, ModalBody, ModalContent, ModalHeader } from '@heroui/react';
+import { RefObject, useState } from 'react';
 import { IoMdMore } from 'react-icons/io';
 import {
   MdDeleteOutline,
@@ -10,7 +10,6 @@ import { VscFolderOpened } from 'react-icons/vsc';
 import { create } from 'zustand';
 
 import { WorkspaceMetadata, fs } from '@/bindings/api';
-import { Button, Dialog, Editable, Heading, IconButton, Menu, toaster } from '@/components/ui';
 import { workspaceController, workspaceManagerController } from '@/controller/workspace';
 import { useEffect } from '@/hooks';
 import { timeUtils } from '@/utils';
@@ -34,7 +33,6 @@ const getSortWorkspace = (workspaces: WorkspaceMetadata[]) => {
 };
 
 export const WorkspaceManager: React.FC<WorkspaceManagerProps> = () => {
-  const contentRef = useRef<HTMLDivElement>(null);
   const state = useWorkspaceManagerState();
   const workspacesOrigin = workspaceController.useWorkspace((s) => s.workspaces);
   const workspaces = getSortWorkspace(workspacesOrigin);
@@ -127,7 +125,7 @@ export const WorkspaceManager: React.FC<WorkspaceManagerProps> = () => {
     if (currentMenuIndex < 0 || workspaces.length < currentMenuIndex) return;
     const path = workspaces[currentMenuIndex].path;
     if (!(await workspaceManagerController.checkWorkspaceExist(path))) {
-      toaster.error({ title: '错误', description: `文件夹不存在: ${path}` });
+      // toaster.error({ title: '错误', description: `文件夹不存在: ${path}` });
       return;
     }
     // console.log('showInFolder:', path);
@@ -220,29 +218,24 @@ export const WorkspaceManager: React.FC<WorkspaceManagerProps> = () => {
   };
 
   return (
-    <Dialog.Root
-      size="cover"
+    <Modal
+      size="4xl"
       placement="center"
-      motionPreset="scale"
-      closeOnInteractOutside
-      open={state.isOpen}
-      onOpenChange={(v) => state.setIsOpen(v.open)}
+      isOpen={state.isOpen}
+      onOpenChange={(v) => state.setIsOpen(v)}
     >
-      <Dialog.Content onKeyDown={onKeyDown} ref={contentRef} positionerProps={{ padding: '90px' }}>
-        <Dialog.Header>
-          <Dialog.Title>
-            <div className={styles.workspaceManagerTitle}>
-              <div>工作区</div>
-              <Button variant="ghost" size="xs" onClick={onOpenWorkspace}>
-                打开新的工作区
-              </Button>
-            </div>
-          </Dialog.Title>
-          <Dialog.CloseTrigger />
-        </Dialog.Header>
-        <Dialog.Body overflow="auto">
+      <ModalContent style={{ padding: '90px' }} onKeyDown={onKeyDown}>
+        <ModalHeader>
+          <div className={styles.workspaceManagerTitle}>
+            <div>工作区</div>
+            <Button variant="ghost" size="sm" onPress={onOpenWorkspace}>
+              打开新的工作区
+            </Button>
+          </div>
+        </ModalHeader>
+        <ModalBody style={{ overflow: 'auto' }}>
           <div className={styles.workspaceManager}>
-            {workspaces.length > 0 ? (
+            {/* {workspaces.length > 0 ? (
               <>
                 {workspaces.map((workspace, i) => {
                   const isEdit = workspacesEdit.length > i ? workspacesEdit[i] : false;
@@ -356,10 +349,10 @@ export const WorkspaceManager: React.FC<WorkspaceManagerProps> = () => {
               </>
             ) : (
               <Heading size="sm">没有任何工作区</Heading>
-            )}
+            )} */}
           </div>
-        </Dialog.Body>
-      </Dialog.Content>
-    </Dialog.Root>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };

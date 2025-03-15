@@ -1,4 +1,5 @@
 /* eslint-disable indent */
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { UserConfig, defineConfig } from 'vite';
@@ -27,6 +28,7 @@ export const renderer: UserConfig = {
       copyFiles: [],
     }),
     react(),
+    tailwindcss(),
     viteVConsole({
       entry: path.resolve(__dirname, 'src/renderer/src/index.tsx'),
       enabled: false,

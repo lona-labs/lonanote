@@ -1,3 +1,4 @@
+import { HTMLMotionProps } from 'framer-motion';
 import { create } from 'zustand';
 
 export interface GlobalDialogType {
@@ -5,50 +6,43 @@ export interface GlobalDialogType {
   options: GlobalDialogOption;
 }
 
-export type GlobalDialogButtonColorPalette =
-  | 'transparent'
-  | 'current'
-  | 'black'
-  | 'white'
-  | 'whiteAlpha'
-  | 'blackAlpha'
-  | 'gray'
-  | 'red'
-  | 'orange'
-  | 'yellow'
-  | 'green'
-  | 'teal'
-  | 'blue'
-  | 'cyan'
-  | 'purple'
-  | 'pink'
-  | 'bg'
-  | 'fg'
-  | 'border';
+export type ButtonColorType =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | undefined;
+export type ButtonVariantType =
+  | 'solid'
+  | 'flat'
+  | 'bordered'
+  | 'light'
+  | 'faded'
+  | 'shadow'
+  | 'ghost'
+  | undefined;
 
 export interface GlobalDialogOption {
   content?: string | null;
   title?: string | null;
+  isKeyboardDismissDisabled?: boolean;
+  isDismissable?: boolean;
   /** @default "md" */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'cover' | 'full';
-  /** @default "outside" */
-  scrollBehavior?: 'inside' | 'outside';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full' | '2xl' | '3xl' | '4xl' | '5xl' | undefined;
+  /** @default "normal" */
+  scrollBehavior?: 'normal' | 'inside' | 'outside';
   /** @default "center" */
-  placement?: 'center' | 'top' | 'bottom';
-  /** @default "scale" */
-  motionPreset?:
-    | 'scale'
-    | 'slide-in-bottom'
-    | 'slide-in-top'
-    | 'slide-in-left'
-    | 'slide-in-right'
-    | 'none';
+  placement?: 'center' | 'auto' | 'top' | 'top-center' | 'bottom' | 'bottom-center' | undefined;
+  motionProps?: HTMLMotionProps<'section'>;
+  disableAnimation?: boolean;
   okText?: string;
   cancelText?: string;
-  okBtnVariant?: 'solid' | 'subtle' | 'surface' | 'outline' | 'ghost' | 'plain';
-  cancelBtnVariant?: 'solid' | 'subtle' | 'surface' | 'outline' | 'ghost' | 'plain';
-  okBtnColorPalette?: GlobalDialogButtonColorPalette;
-  cancelBtnColorPalette?: GlobalDialogButtonColorPalette;
+  okBtnVariant?: ButtonVariantType;
+  cancelBtnVariant?: ButtonVariantType;
+  okBtnColor?: ButtonColorType;
+  cancelBtnColor?: ButtonColorType;
   /** 隐藏确定按钮 */
   hideOkBtn?: boolean;
   /** 隐藏取消按钮 */

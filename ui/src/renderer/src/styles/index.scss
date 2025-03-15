@@ -23,8 +23,8 @@ img {
 }
 
 :root {
-  --focus-border: var(--chakra-colors-color-palette-focus-ring);
-  --separator-border: var(--chakra-colors-border);
+  --focus-border: hsl(var(--heroui-primary-500));
+  --separator-border: #00000000;
 }
 
 .window-title-no-drag {

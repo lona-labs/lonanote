@@ -1,7 +1,6 @@
-import { Input } from '@chakra-ui/react';
+import { Input } from '@heroui/react';
 import { useEffect, useState } from 'react';
 
-import { Editable, Heading } from '@/components/ui';
 import { workspaceController } from '@/controller/workspace';
 
 import { BaseSettingsPanelProps } from '../Settings';
@@ -21,7 +20,7 @@ export const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
   return (
     <div className={styles.workspaceSettings}>
       {currentWorkspace == null ? (
-        <Heading size="sm">没有打开工作区</Heading>
+        <div>没有打开工作区</div>
       ) : (
         <div className={styles.workspaceSettings}>
           <div className={styles.rowSettings}>
@@ -30,8 +29,8 @@ export const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
               <Input
                 readOnly
                 size="sm"
-                variant="flushed"
-                spellCheck={false}
+                variant="faded"
+                spellCheck="false"
                 placeholder="工作区名字"
                 value={workspaceName}
                 onChange={(e) => {
@@ -46,8 +45,8 @@ export const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
               <Input
                 readOnly
                 size="sm"
-                variant="flushed"
-                spellCheck={false}
+                variant="faded"
+                spellCheck="false"
                 placeholder="工作区路径"
                 value={workspacePath}
                 onChange={(e) => {

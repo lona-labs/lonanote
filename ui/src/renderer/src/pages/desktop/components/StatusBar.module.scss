@@ -1,6 +1,6 @@
 .statusBar {
   height: 100%;
   width: 100%;
-  background-color: var(--chakra-colors-bg);
-  border-top: 1px solid var(--chakra-colors-border);
+  background-color: hsl(var(--heroui-background-100));
+  border-top: 1px solid hsl(var(--heroui-divider) / 0.15);
 }

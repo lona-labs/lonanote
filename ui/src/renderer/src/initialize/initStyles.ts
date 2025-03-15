@@ -1,3 +1,4 @@
+import '@/styles/global.css';
 import '@/styles/index.scss';
 import { utils } from '@/utils';
 

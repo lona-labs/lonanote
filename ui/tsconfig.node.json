@@ -11,6 +11,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "composite": true,
+    "moduleResolution": "Bundler",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": false,

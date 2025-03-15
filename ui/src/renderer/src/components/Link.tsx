@@ -1,6 +1,5 @@
+import { Link as UILink, LinkProps as UILinkProps } from '@heroui/react';
 import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router';
-
-import { Link as UILink, LinkProps as UILinkProps } from './ui';
 
 export interface LinkProps extends UILinkProps {
   to: string;

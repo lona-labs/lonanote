@@ -1,5 +1,6 @@
+import { Button, Switch } from '@heroui/react';
+
 import { path } from '@/bindings/api/path';
-import { Button, Switch } from '@/components/ui';
 import { config } from '@/config';
 import {
   setSettingsAutoCheckUpdate,
@@ -22,9 +23,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = () => {
         <div className={styles.rowSettingsLeft}>自动检查更新：</div>
         <div className={styles.rowSettingsRight}>
           <Switch
-            size="md"
+            size="sm"
             checked={settings.autoCheckUpdate}
-            onCheckedChange={(e) => setSettingsAutoCheckUpdate(e.checked)}
+            onValueChange={(v) => setSettingsAutoCheckUpdate(v)}
           />
         </div>
       </div>
@@ -32,9 +33,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = () => {
         <div className={styles.rowSettingsLeft}>自动打开上次工作区：</div>
         <div className={styles.rowSettingsRight}>
           <Switch
-            size="md"
+            size="sm"
             checked={settings.autoOpenLastWorkspace}
-            onCheckedChange={(e) => setSettingsAutoOpenLastWorkspace(e.checked)}
+            onValueChange={(v) => setSettingsAutoOpenLastWorkspace(v)}
           />
         </div>
       </div>
@@ -44,7 +45,8 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = () => {
           <div className={styles.rowSettingsRight}>
             <Button
               size="sm"
-              onClick={async () => {
+              variant="faded"
+              onPress={async () => {
                 const dataDir = await path.getDataDir();
                 console.log(dataDir);
                 if (window.api) {

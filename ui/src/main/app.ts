@@ -215,13 +215,16 @@ export const setupApp = async () => {
     });
 
     ipcMain.handle('setTitleBarColor', (e, color, backgroudColor) => {
-      const win = getActiveWin();
-      if (win && color) {
-        settings.setTitleBarColor(color);
-        settings.setTitleBarBackgroudColor(backgroudColor);
-        const titleBarOverlay = getTitleBarOverlay(settings.getZoom());
-        if (titleBarOverlay) {
-          win.setTitleBarOverlay(titleBarOverlay);
+      const ws = windows;
+      if (ws && color) {
+        for (let i = 0; i < ws.length; i++) {
+          const win = ws[i];
+          settings.setTitleBarColor(color);
+          settings.setTitleBarBackgroudColor(backgroudColor);
+          const titleBarOverlay = getTitleBarOverlay(settings.getZoom());
+          if (titleBarOverlay) {
+            win.setTitleBarOverlay(titleBarOverlay);
+          }
         }
       }
     });

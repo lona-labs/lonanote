@@ -1,6 +1,5 @@
-import { useRef } from 'react';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react';
 
-import { Button, Dialog } from '@/components/ui';
 import { GlobalDialogOption, GlobalDialogType, useGlobalDialogStore } from '@/models/global';
 
 export const showDialog = (options: GlobalDialogOption) => {
@@ -20,7 +19,6 @@ export const closeDialog = () => {
 };
 
 export const GlobalDialog = () => {
-  const contentRef = useRef<HTMLDivElement>(null);
   const state = useGlobalDialogStore();
   const ops = state.options;
   const close = () => {
@@ -28,63 +26,65 @@ export const GlobalDialog = () => {
       ops.onClose();
     }
   };
-  const cancelBtn = (
-    <Button
-      variant={ops.cancelBtnVariant || 'outline'}
-      colorPalette={ops.cancelBtnColorPalette}
-      onClick={() => {
-        ops.onCancel?.();
-      }}
-    >
-      {ops.cancelText || '取消'}
-    </Button>
-  );
   return (
-    <Dialog.Root
+    <Modal
       size={ops.size}
       placement={ops.placement || 'center'}
-      motionPreset={ops.motionPreset}
+      motionProps={ops.motionProps}
+      disableAnimation={ops.disableAnimation}
       scrollBehavior={ops.scrollBehavior}
-      closeOnInteractOutside
-      open={state.open}
+      isKeyboardDismissDisabled={ops.isKeyboardDismissDisabled}
+      isDismissable={ops.isDismissable}
+      hideCloseButton={ops.hideCloseBtn}
+      isOpen={state.open}
       onOpenChange={(v) => {
-        if (v.open === false) {
+        if (v === false) {
           useGlobalDialogStore.setState({ open: false });
           close();
         }
       }}
     >
-      <Dialog.Content ref={contentRef}>
-        <Dialog.Header>
-          <Dialog.Title>{ops.title}</Dialog.Title>
-        </Dialog.Header>
-        <Dialog.Body overflow="auto">{ops.content}</Dialog.Body>
-        {!ops.hideCancelBtn && !ops.hideOkBtn && (
-          <Dialog.Footer>
-            {!ops.hideCancelBtn && ops.closeCancel === false ? (
-              cancelBtn
-            ) : (
-              <Dialog.ActionTrigger asChild>{cancelBtn}</Dialog.ActionTrigger>
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">{ops.title}</ModalHeader>
+            <ModalBody style={{ overflow: 'auto' }}>{ops.content}</ModalBody>
+            {!ops.hideCancelBtn && !ops.hideOkBtn && (
+              <ModalFooter>
+                {!ops.hideCancelBtn && (
+                  <Button
+                    variant={ops.cancelBtnVariant || 'bordered'}
+                    color={ops.cancelBtnColor || 'danger'}
+                    onPress={() => {
+                      ops.onCancel?.();
+                      if (ops.closeCancel !== false) {
+                        onClose();
+                      }
+                    }}
+                  >
+                    {ops.cancelText || '取消'}
+                  </Button>
+                )}
+                {!ops.hideOkBtn && (
+                  <Button
+                    variant={ops.okBtnVariant}
+                    color={ops.okBtnColor}
+                    onPress={() => {
+                      ops.onOk?.();
+                      if (ops.closeOk !== false) {
+                        onClose();
+                        close();
+                      }
+                    }}
+                  >
+                    {ops.okText || '确定'}
+                  </Button>
+                )}
+              </ModalFooter>
             )}
-            {!ops.hideOkBtn && (
-              <Button
-                variant={ops.okBtnVariant}
-                colorPalette={ops.okBtnColorPalette}
-                onClick={() => {
-                  ops.onOk?.();
-                  if (ops.closeOk !== false) {
-                    useGlobalDialogStore.setState({ open: false });
-                    close();
-                  }
-                }}
-              >
-                {ops.okText || '确定'}
-              </Button>
-            )}
-          </Dialog.Footer>
+          </>
         )}
-        {!ops.hideCloseBtn && <Dialog.CloseTrigger />}
-      </Dialog.Content>
-    </Dialog.Root>
+      </ModalContent>
+    </Modal>
   );
 };

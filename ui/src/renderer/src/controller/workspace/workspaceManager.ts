@@ -7,9 +7,10 @@ import {
   workspaceManager,
 } from '@/bindings/api/workspace';
 import { spinner } from '@/components';
-import { toaster } from '@/components/ui';
 
 import { setCurrentWorkspace, setWorkspaceName, setWorkspaceRootPath } from './workspace';
+
+const toaster: any = {};
 
 export const isOpenWorkspace = async (workspacePath: string, errorText?: string | null) => {
   const path = formatPath(workspacePath);

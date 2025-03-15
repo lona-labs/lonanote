@@ -1,11 +1,10 @@
-import { useToken } from '@chakra-ui/react';
+import { semanticColors } from '@heroui/theme';
 import { useEffect } from 'react';
 
 import { isElectron } from '@/bindings/core';
 import { useWindowTitleHeight } from '@/hooks';
-import { utils } from '@/utils';
 
-import { useColorMode } from './ui';
+import { useColorMode } from './provider/ColorModeProvider';
 
 const titlebarStyle = `
 .titlebar {
@@ -18,15 +17,15 @@ const titlebarStyle = `
 `;
 
 export const Title = () => {
-  const [bgColor, fgColor] = useToken('colors', ['bg', 'fg']);
   const { resolvedColorMode } = useColorMode();
   useEffect(() => {
     if (!window.api) return;
     requestAnimationFrame(() => {
-      if (window.api) {
-        const bg = utils.getCssVariableValue(bgColor);
-        const fg = utils.getCssVariableValue(fgColor);
-        window.api.utils.setTitleBarColor(fg, bg);
+      if (window.api && resolvedColorMode) {
+        const c = semanticColors[resolvedColorMode];
+        const bg = typeof c.background === 'string' ? c.background : c.background.DEFAULT;
+        const fg = typeof c.foreground === 'string' ? c.foreground : c.foreground.DEFAULT;
+        window.api.utils.setTitleBarColor(fg || '#000000', bg || '#ffffff');
       }
     });
   }, [resolvedColorMode]);

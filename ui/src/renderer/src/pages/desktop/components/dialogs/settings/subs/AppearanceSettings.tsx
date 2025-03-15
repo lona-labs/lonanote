@@ -1,5 +1,6 @@
+import { Input } from '@heroui/react';
+
 import { ColorModeSelect } from '@/components';
-import { ColorPicker, HStack, StepperInput, parseColor } from '@/components/ui';
 import {
   defaultThemeColor,
   isSupportResizeWindow,
@@ -15,7 +16,7 @@ import styles from '../Settings.module.scss';
 
 export interface AppearanceSettingsProps extends BaseSettingsPanelProps {}
 
-export const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ contentRef }) => {
+export const AppearanceSettings: React.FC<AppearanceSettingsProps> = () => {
   const settings = useUISettings();
   const themeColor = settings.themeColor;
   return (
@@ -23,13 +24,22 @@ export const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ contentR
       <div className={styles.rowSettings}>
         <div className={styles.rowSettingsLeft}>颜色模式：</div>
         <div className={styles.rowSettingsRight}>
-          <ColorModeSelect width="100%" contentRef={contentRef} size="sm" />
+          <ColorModeSelect variant="faded" className="w-full" size="sm" />
         </div>
       </div>
       <div className={styles.rowSettings}>
         <div className={styles.rowSettingsLeft}>主题颜色：</div>
         <div className={styles.rowSettingsRight}>
-          <ColorPicker.Root
+          <Input
+            size="sm"
+            variant="faded"
+            spellCheck="false"
+            value={themeColor}
+            onValueChange={(v) => setThemeColor(v)}
+          />
+          <ResetButton className="ml-1" onPress={() => setThemeColor(defaultThemeColor)} />
+          {/* TODO ColorPicker */}
+          {/* <ColorPicker.Root
             width="100%"
             size="sm"
             value={parseColor(themeColor)}
@@ -47,22 +57,23 @@ export const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ contentR
                 <ColorPicker.Sliders />
               </HStack>
             </ColorPicker.Content>
-          </ColorPicker.Root>
+          </ColorPicker.Root> */}
         </div>
       </div>
       {isSupportZoom() && settings.zoom != null && (
         <div className={styles.rowSettings}>
           <div className={styles.rowSettingsLeft}>缩放：</div>
           <div className={styles.rowSettingsRight}>
-            <StepperInput
+            <Input
               size="sm"
+              type="number"
+              variant="faded"
               value={settings.zoom.toString()}
-              onValueChange={(v) => setZoom(v.valueAsNumber)}
-              btnProps={{ size: 'sm' }}
+              onValueChange={(v) => setZoom(parseInt(v))}
               min={-8}
               max={8}
             />
-            <ResetButton onClick={() => setZoom(0)} />
+            <ResetButton className="ml-1" onPress={() => setZoom(0)} />
           </div>
         </div>
       )}
@@ -71,7 +82,7 @@ export const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ contentR
           <div className={styles.rowSettingsLeft}>窗口大小：</div>
           <div className={styles.rowSettingsRight}>
             <div>{`宽: ${settings.windowSize.width}, 高: ${settings.windowSize.height}`}</div>
-            <ResetButton onClick={() => resetWindowSize()} />
+            <ResetButton onPress={() => resetWindowSize()} />
           </div>
         </div>
       )}
