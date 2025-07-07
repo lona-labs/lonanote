@@ -1,3 +1,5 @@
+# 仓库迁移至 https://github.com/luoluoqixi/lonanote
+
 # 露娜笔记 (LonaNote)
 
 一款本地优先的开源笔记软件，使用 TypeScript 和 Rust 编写。
